@@ -32,7 +32,7 @@ class Main{
 			try {
 				int inChar;
 				while((inChar=inStream.read())!=-1) {
-					//TODO MK
+					calculateChar((char)inChar);
 				}
 				inStream.close();
 			} catch (IOException e) {
@@ -69,5 +69,9 @@ class Main{
 			System.err.println("File do not exists!");
 			System.exit(0);
 		}
+	}
+	
+	private static void calculateChar(char c) {
+		
 	}
 }
