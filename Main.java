@@ -36,10 +36,10 @@ class Main{
 				}
 				
 				//若文件的最后一行有字符则将这一行也加在有效行上
-				if((int)brr[cFlag-1]>=0)
+				if(Character.isLetterOrDigit(brr))
 					row++;
 				
-				System.out.println("字符数为："+cFlag+"\n"+"单词的个数为："+wordFlag+"\n"+"有效行数为："+row);
+				System.out.println("字符数为："+charCount+"\n"+"单词的个数为："+wordCount+"\n"+"有效行数为："+row);
 				
 				//对单词进行排序并输出前十个单词
 				sort(str,number);
@@ -82,75 +82,85 @@ class Main{
 			System.exit(0);
 		}
 	}
-	static int wordFlag=0;       //记录文件中单词的个数
-	static int cFlag=0;          //记录文件中字符的个数
+	static int wordCount=0;       //记录文件中单词的个数
+	static int charCount=0;          //记录文件中字符的个数
 	static int flag=0;           //记录连续的字母个数
-	static char[] arr=new char[3000];           //将字符记录方便存储单词
 	static String[] str=new String[3000];        //存储单词
 	static int[] number=new int[3000];         //存储相应单词的数量
-	static int length=0;         //记录单词长度
 	static int reduce=0;         //重复的单词数
 	static int row=0;            //记录有效行
-	static char[] brr=new char[3000];          //记录字符并查找换行符
+	static char brr='0';          //记录字符并查找换行符
+	static boolean rFlag=false;
+	static boolean nFlag=false;
 	
 	private static void calculateChar(int c) {
 		
 		//统计文件中的字符数
 		char i=(char)c;
 		if(c>=0&&c<=127) {
-			cFlag++;
+			charCount++;
 		}
-		brr[cFlag-1]=i;
+		
+		
+		//记录有效行数
+		if(c=='\r') {
+			rFlag=true;
+		}
+		if(c=='\n'&&rFlag) {
+			nFlag=true;
+		}
+		if(nFlag&&Character.isLetterOrDigit(c)) {
+			row++;
+			rFlag=false;
+			nFlag=false;
+		}
+		//删去计算换行符时多算的一个字符
+		if(c=='\n')charCount--;
 		
 		
 		//统计文件中的单词数
 		if(Character.isLetter(i)) {
 				flag++;
-				length++;
 		}
 		else if(Character.isDigit(i)&&flag>=4){
-			length++;
-		}
-		else if(i==32){
-			flag=0;
-			length=0;
+			flag++;
 		}
 		else {
 			flag=0;
-			length=0;
 		}
-		
+			brr=i;
 		
 		//提取单词至字符串
-		if(length==4) {
-			wordFlag++;
-			number[wordFlag-reduce-1]=0;
-			number[wordFlag-reduce-1]+=1;
-			str[wordFlag-reduce-1]="";
-			str[wordFlag-reduce-1]=str[wordFlag-reduce-1]+brr[cFlag-4]+brr[cFlag-3]+brr[cFlag-2]+brr[cFlag-1];
+		if(flag==1) {
+			str[wordCount-reduce]="";
+			number[wordCount-reduce]=0;
+			str[wordCount-reduce]=str[wordCount-reduce]+brr;
 		}
-		else if(length>4) {
-			str[wordFlag-reduce-1]=str[wordFlag-reduce-1]+brr[cFlag-1];
+		else if(flag>1&&flag<4)
+		{
+			str[wordCount-reduce]=str[wordCount-reduce]+brr;
+		}
+		if(flag==4) {
+			wordCount++;
+			number[wordCount-reduce-1]+=1;
+			str[wordCount-reduce-1]=str[wordCount-reduce-1]+brr;
+		}
+		else if(flag>4) {
+			str[wordCount-reduce-1]=str[wordCount-reduce-1]+brr;
 			//将所有的单词转换成小写
-			str[wordFlag-reduce-1]=str[wordFlag-reduce-1].toLowerCase();
+			str[wordCount-reduce-1]=str[wordCount-reduce-1].toLowerCase();
 		}
 		
 		
 		//记录单词频率
-		if(length==0) {
-			for(i=0;i<wordFlag-reduce-1;i++)
+		if(flag==0) {
+			for(i=0;i<wordCount-reduce-1;i++)
 			{
-				if(str[wordFlag-reduce-1].equals(str[i])) {
+				if(str[wordCount-reduce-1].equals(str[i])) {
 					number[i]++;
 					reduce++;
 				}
 			}
-		}
-		
-		
-		//记录有效行数
-		if(cFlag>3&&brr[cFlag-3]=='\r'&&brr[cFlag-2]=='\n'&&(int)brr[cFlag-4]>=0) {
-			row++;
 		}
 		
 	}
