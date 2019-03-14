@@ -24,13 +24,17 @@ class Main{
 		
 		//read file "input.txt"
 		File inFile=new File(args[0]);
-	
+		/*TextCalculatorTest t=new TextCalculatorTest();
+		t.testCharCount();
+		t.testRowCount();
+		t.testWordCount();
+		t.testTopWordCount();*/
 		
 		//count
 		resultString+="characters: "+TextCalculator.charCount(inFile)+'\n';
 		resultString+="words: "+TextCalculator.wordCount(inFile)+'\n';
 		resultString+="lines: "+TextCalculator.rowCount(inFile)+'\n';
-		resultString+=TextCalculator.topWordCount();
+		resultString+=TextCalculator.topWordCount(inFile);
 			
 			
 		//output file result.txt
